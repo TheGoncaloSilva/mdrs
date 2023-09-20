@@ -38,43 +38,37 @@ n_values = [100, 200, 1000]; % Values of n
 colors = ['r-', 'm-.', 'b-']; % Plot colors
 
 figure(1)
-hold on
 for i = 1:length(n_values)
     n = n_values(i);
     n_bits = n*byte_size;
-    Fx = nchoosek(n_bits, 0) .* (1-x).^(n_bits);
+    Fx = nchoosek(n_bits, 0) * (1-x).^(n_bits);
     semilogx(x, Fx * 100, colors(i), 'LineWidth', 2)
+    hold on % Attention, it needs to be after the plot function
 end
 
-% Get the current axes object
-ax = gca;
-% Set the x-axis tick labels in the same format
-xtickformat(ax, '10^{%d}');
 title("Probability of packet reception without errors (%)")
 legend('100 Bytes', '200 Bytes', '1000 Bytes', 'Location', 'southwest')
 xlabel("Bit Error Rate")
+ylim([0 100]);
 grid on
 hold off
 clear
 
 % Ex: 2.e - packet received without errors
 byte_size = 8; % 1 byte = 8 bits
-x = linspace(64*byte_size, 1518*byte_size);
+x = 64:1518;%linspace(64*byte_size, 1518*byte_size);
 n_values = [-4, -3, -2]; % Values of n
 colors = ['r-', 'm-.', 'b-']; % Plot colors
 
 figure(2)
-hold on
+
 for i = 1:length(n_values)
     n = n_values(i);
-    Fx = (1-10^n).*x;
+    Fx = (1-10^n).^(x*byte_size);
     semilogy(x, Fx, colors(i), 'LineWidth', 2)
+    hold on
 end
 
-% Get the current axes object
-ax = gca;
-% Set the y-axis tick labels in the desired format
-ytickformat(ax, '10^{%d}');
 title("Probability of packet reception without errors (%)")
 legend('ber=1e-4', 'ber=1e-3', 'ber=1e-2', 'Location', 'southwest')
 xlabel("Packet Size (Bytes)");
