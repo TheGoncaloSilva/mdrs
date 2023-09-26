@@ -4,23 +4,45 @@ probs = [[600, 100, 20, 5]
          [8  , 5  , 2 , 1]];
 state_probability = 1:5;
 for i = 1:5
-    state_probability(i) = 1 / (1 + transition_sum(probs, i));
-    fprintf("Probability of the link to be in the 10^%.0f state is: %2.4f%%\n", log10(states(i)), state_probability(i)*100);
+    state_probability(i) = (1 / (1 + transition_sum(probs, i)));
+    fprintf("Probability of the link to be in the 10^%.0f state is: %2.2e\n", log10(states(i)), state_probability(i)*states(i));
 end
-clear
 
-% Ex: 3.b - average percentage of time the link is in each of the five states;
+den = 1 + 8/600 + 8/600 * 5/100 + 8/600 * 5/100 * 2/20 + 8/600 * 5/100 * 2/20 * 1/5; 
+pstates(1) = 1 / den;
+pstates(2) = (8/600) / den;
+pstates(3) = (8/600 * 5/100) / den;
+pstates(4) = (8/600 * 5/100 * 2/20) / den;
+pstates(5) = (8/600 * 5/100 * 2/20 * 1/5) / den;
+
+% Ex: 3.b - average percentage of time the link is in each of the five states
 fprintf("The average percentage of time the link is in each of the five states is equal to the probability of being in each of " + ...
     "the five states, just in percentage format. In summary, the probabiliy of a link to be in a state is equal to the average " + ...
-    "percentage of time that the link stays in the respective state");
+    "percentage of time that the link stays in the respective state\n");
 
-% Ex: 3.c - the average ber of the link (1/values_out)
+% Ex: 3.c - average ber of the link (1/values_out)
+ber = sum(state_probability .* states);
+fprintf("The average of the BER link is: %.2e\n", ber);
+
+% Ex: 3.d - average time duration (in minutes) that the link stays in each of the five states
 out = zeros(1,5);
 out(1) = 1/8;
 out(2) = 1/(600+5);
 out(3) = 1/(100+2);
-out(4) = 
+out(4) = 1/(20+1);
+out(5) = 1/5;
 
+for i=1:5
+    fprintf('The average time duration that the link stays is state 10^%.0f is: %2.2f min\n', log10(states(i)), out(i)*60);
+end
+
+% Ex: 3.e - probability of the link being in the normal state and in interference state
+normal_state = sum(state_probability(1:3)); % states smaller than 10^-3
+interference_state = sum(state_probability(4:5)); % states >= than 10^-3
+fprintf('The probabilty of the link being in the normal state is: %.6f\n', normal_state);
+fprintf('The probabilty of the link being in the interference state is: %.2e\n', interference_state);
+
+% Ex: 3.f - average ber of the link when it is in the normal state and when it is in the interference state
 
 
 % From Exercise 3.a
