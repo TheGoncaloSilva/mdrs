@@ -36,7 +36,45 @@ fprintf('The capacity of the link is: %.2f pps\n', capacity_second);
 % Ex: 4.d - average packet queuing delay and average packet system delay of the IP flow 
 %   (the system delay is the queuing delay + transmission time + propagation delay) using the 
 %   M/G/1 queuing model;
+x = 64:1518;
+s = (x .* 8) ./ (max_capacity);
+s2 = (x .* 8) ./ (max_capacity);
+% similar to implemented in (A) however simpler in understanding
+for i = 1:length(x)
+    if i == 1
+        s(i) = s(i) * 0.19;
+        s2(i) = s2(i)^2 * 0.19;
+    elseif i == 110-64+1
+        s(i) = s(i) * 0.23;
+        s2(i) = s2(i)^2 * 0.23;
+    elseif i == 1518-64+1
+        s(i) = s(i) * 0.17;
+        s2(i) = s2(i)^2 * 0.17;
+    else
+        s(i) = s(i) * rem_prob / (n_values-length(size_prob(2,:)));
+        s2(i) = s2(i)^2 * rem_prob / (n_values-length(size_prob(2,:)));
+    end
+end
 
+Es = sum(s);
+Es2 = sum(s2);
+avg_time_sci = avg_time * 10^(-4);  % Convert to scientific notation
+Wq = (K * Es2) / (2 * (1 - K * Es));
+W = Wq + avg_time_sci + delay;
+
+fprintf(['The average packet queuing delay is: %.2e seconds and the average packet system ' ...
+    'delay of the IP flow is: %.2e seconds\n'], Wq, W);
+
+% Ex: 4.e - plot the average system delay as a function of the packet
+%   arrival rate k (from k = 100 pps up to k = 2000 pps)
+y = 100:2000;
+wq_func = (y * ES2) ./ (2 * (1 - y * ES));
+
+figure(1);
+plot(y, wq_func);
+title("Average system delay (seconds)");
+xlabel("{\lambda} (pps)")
+grid on;
 
 
 
