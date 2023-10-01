@@ -67,14 +67,90 @@ fprintf(['The average packet queuing delay is: %.2e seconds and the average pack
 
 % Ex: 4.e - plot the average system delay as a function of the packet
 %   arrival rate k (from k = 100 pps up to k = 2000 pps)
-y = 100:2000;
-wq_func = (y * ES2) ./ (2 * (1 - y * ES));
+x = 100:2000;
+wq_func = (x * Es2) ./ (2 * (1 - x * Es));
 
 figure(1);
-plot(y, wq_func);
+plot(x, wq_func);
 title("Average system delay (seconds)");
 xlabel("{\lambda} (pps)")
 grid on;
+
+% Ex: 4.f - for C = 10, 20 and 100 Mbps, draw a plot with the average system delay as a function of 
+%   the packet arrival rate k (from k = 100 pps up to k = 2000 pps when C = 10, from k = 200 pps up to 
+%   k = 4000 pps when C = 20 and from k = 1000 pps up to k = 20000 pps when C = 100); the x-axis should 
+%   indicate the value of k as a percentage of the capacity of the link, in pps (determined in 4.c.); 
+%   analyze the results and take conclusions
+% Low effort, copied from Clerigo
+prob_left = rem_prob / (n_values-length(size_prob(2,:)));
+capacities = [10*10^6 20*10^6 100*10^6];
+y1 = 100:2000;
+y2 = 200:4000;
+y3 = 1000:20000;
+
+x1 = (y1 ./ (capacities(1) / (avg_bytes * 8))) * 100;
+x2 = (y2 ./ (capacities(2) / (avg_bytes * 8))) * 100;
+x3 = (y3 ./ (capacities(3) / (avg_bytes * 8))) * 100;
+
+S1 = (x .* 8) ./ capacities(1);
+S12 = (x .* 8) ./ capacities(1);
+S2 = (x .* 8) ./ capacities(2);
+S22 = (x .* 8) ./ capacities(2);
+S3 = (x .* 8) ./ capacities(3);
+S32 = (x .* 8) ./ capacities(3);
+
+for i = 1:length(x)
+    if i == 1
+        S1(i) = S1(i) * 0.19;
+        S12(i) = S12(i)^2 * 0.19;
+        S2(i) = S2(i) * 0.19;
+        S22(i) = S22(i)^2 * 0.19;
+        S3(i) = S3(i) * 0.19;
+        S32(i) = S32(i)^2 * 0.19;
+    elseif i == 110-64+1
+        S1(i) = S1(i) * 0.23;
+        S12(i) = S12(i)^2 * 0.23;
+        S2(i) = S2(i) * 0.23;
+        S22(i) = S22(i)^2 * 0.23;
+        S3(i) = S3(i) * 0.23;
+        S32(i) = S32(i)^2 * 0.23;
+    elseif i == 1518-64+1
+        S1(i) = S1(i) * 0.17;
+        S12(i) = S12(i)^2 * 0.17;
+        S2(i) = S2(i) * 0.17;
+        S22(i) = S22(i)^2 * 0.17;
+        S3(i) = S3(i) * 0.17;
+        S32(i) = S32(i)^2 * 0.17;
+    else
+        S1(i) = S1(i) * prob_left;
+        S12(i) = S12(i)^2 * prob_left;
+        S2(i) = S2(i) * prob_left;
+        S22(i) = S22(i)^2 * prob_left;
+        S3(i) = S3(i) * prob_left;
+        S32(i) = S32(i)^2 * prob_left;
+    end
+end
+
+wq1 = y1 .* sum(S12) ./ (2.*(1 - y1 .* sum(S1)));
+wq2 = y2 .* sum(S22) ./ (2.*(1 - y2 .* sum(S2)));
+wq3 = y3 .* sum(S32) ./ (2.*(1 - y3 .* sum(S3)));
+
+avg_times = zeros(1, 3);
+for i=1:3
+    avg_times(i) = (avg_bytes * 8) / capacities(i);
+end
+
+sys1 = wq1 + avg_times(1) + delay;
+sys2 = wq2 + avg_times(2) + delay;
+sys3 = wq3 + avg_times(3) + delay;
+
+figure(2);
+plot(x1, sys1, 'b', x2, sys2, 'r', x3, sys3, 'g');
+title("Average system delay (seconds)");
+legend('C = 10 Mbps','C = 20 Mbps','C = 100 Mbps', 'location','northwest');
+xlabel("{\lambda} (% of the link capability)")
+grid on;
+
 
 
 
