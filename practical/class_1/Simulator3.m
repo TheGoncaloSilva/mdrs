@@ -45,8 +45,8 @@ tmp= Clock + exprnd(1/lambda);
 Event_List= [ARRIVAL, tmp, GeneratePacketSize(), tmp, 0];
 % Initializing the voip packets:
 for i=1:n
-    time = Clock + randi(0,20);
-    Event_List= [Event_List, ARRIVAL, time, randi(110,130), time, 1];
+    time = Clock + randi([0 20]);
+    Event_List= [Event_List, ARRIVAL, time, randi([110 130]), time, 1];
 end
 
 %Similation loop:
@@ -61,10 +61,11 @@ while TRANSMITTEDPACKETSdata<P               % Stopping criterium
         if Event(6) == 0                % data packet
             TOTALPACKETSdata= TOTALPACKETSdata+1;
             tmp= Clock + exprnd(1/lambda);
+            Event_List = [Event_List; ARRIVAL, tmp, GeneratePacketSize(), tmp, 0];
         else                            % voip packet
             TOTALPACKETSvoip= TOTALPACKETSvoip+1;
-            tmp = Clock + randi(16,24);
-        Event_List = [Event_List; ARRIVAL, tmp, GeneratePacketSize(), tmp, Event(6)];
+            tmp = Clock + randi([16 24]);
+            Event_List = [Event_List; ARRIVAL, tmp, randi([110 130]), tmp, 1];
         end
         if STATE==0
             STATE= 1;
