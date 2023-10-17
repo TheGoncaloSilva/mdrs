@@ -26,22 +26,22 @@ showStats(PL, APD, MPD, TT, alfa, N);
 
 function showStats(PLdata, PLvoip, APDdata, APDvoip, MPDdata, MPDvoip, TT, alfa, N)
     media = mean(PLdata);
-    term = norminv(1-alfa/2)*sqrt(var(PL)/N);
+    term = norminv(1-alfa/2)*sqrt(var(PLdata)/N);
     fprintf('PacketLoss of data(%%)\t\t = %.2e +- %.2e\n',media,term)
     media = mean(PLvoip);
-    term = norminv(1-alfa/2)*sqrt(var(PL)/N);
+    term = norminv(1-alfa/2)*sqrt(var(PLvoip)/N);
     fprintf('PacketLoss of VoIP(%%)\t\t = %.2e +- %.2e\n',media,term)
     media = mean(APDdata);
-    term = norminv(1-alfa/2)*sqrt(var(APD)/N);
+    term = norminv(1-alfa/2)*sqrt(var(APDdata)/N);
     fprintf('Av. Packet Delay of data (ms)\t = %.2e +- %.2e\n',media,term)
     media = mean(APDvoip);
-    term = norminv(1-alfa/2)*sqrt(var(APD)/N);
+    term = norminv(1-alfa/2)*sqrt(var(APDvoip)/N);
     fprintf('Av. Packet Delay of VoIP (ms)\t = %.2e +- %.2e\n',media,term)
     media = mean(MPDdata);
-    term = norminv(1-alfa/2)*sqrt(var(MPD)/N);
+    term = norminv(1-alfa/2)*sqrt(var(MPDdata)/N);
     fprintf('Max. Packet Delay of data (ms)\t = %.2e +- %.2e\n',media,term)
     media = mean(MPDvoip);
-    term = norminv(1-alfa/2)*sqrt(var(MPD)/N);
+    term = norminv(1-alfa/2)*sqrt(var(MPDvoip)/N);
     fprintf('Max. Packet Delay of VoIP (ms)\t = %.2e +- %.2e\n',media,term)
     media = mean(TT);
     term = norminv(1-alfa/2)*sqrt(var(TT)/N);

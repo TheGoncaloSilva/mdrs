@@ -53,12 +53,13 @@ end
 while TRANSMITTEDPACKETSdata<P               % Stopping criterium
     Event_List= sortrows(Event_List,2);  % Order EventList by time
     Event= Event_List(1,1);              % Get first event and 
+    EventObj= Event_List(1,:);
     Clock= Event_List(1,2);              %   and
     Packet_Size= Event_List(1,3);        %   associated
     Arrival_Instant= Event_List(1,4);    %   parameters.
     Event_List(1,:)= [];                 % Eliminate first event
     if Event == ARRIVAL         % If first event is an ARRIVAL
-        if Event(6) == 0                % data packet
+        if EventObj(5) == 0                % data packet
             TOTALPACKETSdata= TOTALPACKETSdata+1;
             tmp= Clock + exprnd(1/lambda);
             Event_List = [Event_List; ARRIVAL, tmp, GeneratePacketSize(), tmp, 0];
@@ -69,13 +70,13 @@ while TRANSMITTEDPACKETSdata<P               % Stopping criterium
         end
         if STATE==0
             STATE= 1;
-            Event_List = [Event_List; DEPARTURE, Clock + 8*Packet_Size/(C*10^6), Packet_Size, Clock, Event(6)];
+            Event_List = [Event_List; DEPARTURE, Clock + 8*Packet_Size/(C*10^6), Packet_Size, Clock, 0];
         else
             if QUEUEOCCUPATION + Packet_Size <= f
                 QUEUE= [QUEUE;Packet_Size , Clock];
                 QUEUEOCCUPATION= QUEUEOCCUPATION + Packet_Size;
             else
-                if Event(6) == 0                % data packet
+                if EventObj(5) == 0                % data packet
                     LOSTPACKETSdata= LOSTPACKETSdata + 1;
                 else                            % voip packet
                     LOSTPACKETSvoip= LOSTPACKETSvoip + 1;
@@ -84,7 +85,7 @@ while TRANSMITTEDPACKETSdata<P               % Stopping criterium
         end
     else                        % If first event is a DEPARTURE
         TRANSMITTEDBYTES= TRANSMITTEDBYTES + Packet_Size;
-        if Event(6) == 0                % data packet
+        if EventObj(5) == 0                % data packet
             DELAYSdata= DELAYSdata + (Clock - Arrival_Instant);
             if Clock - Arrival_Instant > MAXDELAYdata
                 MAXDELAYdata= Clock - Arrival_Instant;
@@ -99,7 +100,7 @@ while TRANSMITTEDPACKETSdata<P               % Stopping criterium
         end
         
         if QUEUEOCCUPATION > 0
-            Event_List = [Event_List; DEPARTURE, Clock + 8*QUEUE(1,1)/(C*10^6), QUEUE(1,1), QUEUE(1,2), Event(6)];
+            Event_List = [Event_List; DEPARTURE, Clock + 8*QUEUE(1,1)/(C*10^6), QUEUE(1,1), QUEUE(1,2), EventObj(5)];
             QUEUEOCCUPATION= QUEUEOCCUPATION - QUEUE(1,1);
             QUEUE(1,:)= [];
         else
