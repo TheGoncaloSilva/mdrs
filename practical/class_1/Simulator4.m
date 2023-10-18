@@ -1,4 +1,4 @@
-function [PLdata, PLvoip , APDdata, APDvoip , MPDdata, MPDvoip , TT] = Simulator3(lambda,C,f,P,n)
+function [PLdata, PLvoip , APDdata, APDvoip , MPDdata, MPDvoip , TT] = Simulator4(lambda,C,f,P,n)
 % INPUT PARAMETERS:
 %  lambda - packet rate (packets/sec)
 %  C      - link bandwidth (Mbps)
@@ -55,7 +55,7 @@ end
 
 %Simulation loop:
 while (TRANSMITTEDPACKETSdata+TRANSMITTEDPACKETSvoip)<P               % Stopping criterium
-    Event_List= sortrows(Event_List,2);  % Order EventList by time
+    Event_List= sortrows(Event_List,[5 2]);  % Order EventList first by packet type and then by time -- Nao alterar aqui
     Event= Event_List(1,1);              % Get first event and 
     Clock= Event_List(1,2);              %   and
     Packet_Size= Event_List(1,3);        %   associated
@@ -77,7 +77,7 @@ while (TRANSMITTEDPACKETSdata+TRANSMITTEDPACKETSvoip)<P               % Stopping
             Event_List = [Event_List; DEPARTURE, Clock + 8*Packet_Size/(C*10^6), Packet_Size, Clock, packetType];
         else
             if QUEUEOCCUPATION + Packet_Size <= f
-                QUEUE= [QUEUE;Packet_Size , Clock, packetType];
+                QUEUE= [QUEUE;Packet_Size , Clock, packetType]; % -- alterar aqui
                 QUEUEOCCUPATION= QUEUEOCCUPATION + Packet_Size;
             else
                 if packetType == DATA                % data packet
