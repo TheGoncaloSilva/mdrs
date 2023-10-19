@@ -110,6 +110,83 @@ end
 alfa= 0.1; % 90% confidence interval %
 showStats(PLdata, PLvoip, APDdata, APDvoip, MPDdata, MPDvoip, TT, alfa, iter);
 
+% Conclusion: The results show that with VoIP packets having higher 
+%   priority, there is no packet loss for both data and VoIP packets. The 
+%   average delay for VoIP packets is significantly lower (5.59 ms) 
+%   compared to data packets (23.5 ms). The maximum delay for VoIP packets 
+%   is also much lower (1.38 ms) compared to data packets (59.5 ms). This 
+%   prioritization significantly improves the performance of VoIP traffic, 
+%   ensuring low delay and no packet loss. The throughput remains high, 
+%   similar to experiment 7.b. The conclusion is that priority-based 
+%   queuing greatly benefits VoIP traffic while maintaining high throughput 
+%   for data.
+
+
+% Ex: 7.f - Repeat the experiment 7.e but now consider f = 10.000 Bytes 
+%   (~10 KBytes). Compare these results with the results of 7.c and take 
+%   conclusions.
+fprintf('\nSimulator4 with f = 10.000 Bytes:\n');
+F = 10000;
+PLdata = zeros(1,iter); %vector with N simulation values
+PLvoip = zeros(1,iter); %vector with N simulation values
+APDdata = zeros(1,iter); %vector with N simulation values
+APDvoip = zeros(1,iter); %vector with N simulation values
+MPDdata = zeros(1,iter); %vector with N simulation values
+MPDvoip = zeros(1,iter); %vector with N simulation values
+TT = zeros(1,iter); %vector with N simulation values
+
+for it= 1:iter
+    [PLdata(it),PLvoip(it),APDdata(it),APDvoip(it),MPDdata(it),MPDvoip(it),TT(it)] = Simulator4(Lambda, C, F, P, n);
+end
+alfa= 0.1; % 90% confidence interval %
+showStats(PLdata, PLvoip, APDdata, APDvoip, MPDdata, MPDvoip, TT, alfa, iter);
+
+% Conclusion: The results indicate that with higher-priority VoIP packets, 
+%   there is still low packet loss for both data and VoIP packets. The 
+%   average delay for VoIP packets is lower (0.534 ms) compared to data 
+%   packets (4.36 ms). The maximum delay for VoIP packets remains very 
+%   low (1.38 ms) compared to data packets (9.96 ms). The throughput is 
+%   high, similar to experiment 7.c. The conclusion is that priority 
+%   queuing continues to benefit VoIP traffic, reducing delay and packet 
+%   loss, while maintaining high throughput for data.
+
+
+% Ex: 7.g - Repeat the experiment 7.f but now consider f = 2.000 Bytes 
+%   (~2 KBytes). Compare these results with the results of 7.d and take 
+%   conclusions.
+fprintf('\nSimulator4 with f = 2.000 Bytes:\n');
+F = 2000;
+PLdata = zeros(1,iter); %vector with N simulation values
+PLvoip = zeros(1,iter); %vector with N simulation values
+APDdata = zeros(1,iter); %vector with N simulation values
+APDvoip = zeros(1,iter); %vector with N simulation values
+MPDdata = zeros(1,iter); %vector with N simulation values
+MPDvoip = zeros(1,iter); %vector with N simulation values
+TT = zeros(1,iter); %vector with N simulation values
+
+for it= 1:iter
+    [PLdata(it),PLvoip(it),APDdata(it),APDvoip(it),MPDdata(it),MPDvoip(it),TT(it)] = Simulator4(Lambda, C, F, P, n);
+end
+alfa= 0.1; % 90% confidence interval %
+showStats(PLdata, PLvoip, APDdata, APDvoip, MPDdata, MPDvoip, TT, alfa, iter);
+
+% Conclusion: The results show some packet loss for both data and VoIP 
+%   packets, though it is still lower for VoIP packets. The average delay 
+%   for VoIP packets is significantly lower (0.434 ms) compared to data 
+%   packets (1.04 ms). The maximum delay for VoIP packets is also much 
+%   lower (1.38 ms) compared to data packets (2.94 ms). The throughput is 
+%   slightly lower than in experiment 7.d. The conclusion is that even 
+%   with smaller packets, priority-based queuing continues to offer 
+%   benefits to VoIP traffic by reducing delay and packet loss, although 
+%   the overall throughput is slightly affected.
+
+% Summary: In summary, prioritizing VoIP packets in the queue leads to 
+%   better performance for VoIP traffic by significantly reducing delay 
+%   and packet loss. The level of improvement may vary based on the packet 
+%   size (f), but it consistently benefits VoIP traffic while still 
+%   maintaining high throughput for data.
+
+
 
 function showStats(PLdata, PLvoip, APDdata, APDvoip, MPDdata, MPDvoip, TT, alfa, N)
     media = mean(PLdata);

@@ -55,7 +55,7 @@ end
 
 %Simulation loop:
 while (TRANSMITTEDPACKETSdata+TRANSMITTEDPACKETSvoip)<P               % Stopping criterium
-    Event_List= sortrows(Event_List,[5 2]);  % Order EventList first by packet type and then by time -- Nao alterar aqui
+    Event_List= sortrows(Event_List,2);  % Order EventList first by packet type and then by time
     Event= Event_List(1,1);              % Get first event and 
     Clock= Event_List(1,2);              %   and
     Packet_Size= Event_List(1,3);        %   associated
@@ -77,7 +77,7 @@ while (TRANSMITTEDPACKETSdata+TRANSMITTEDPACKETSvoip)<P               % Stopping
             Event_List = [Event_List; DEPARTURE, Clock + 8*Packet_Size/(C*10^6), Packet_Size, Clock, packetType];
         else
             if QUEUEOCCUPATION + Packet_Size <= f
-                QUEUE= [QUEUE;Packet_Size , Clock, packetType]; % -- alterar aqui
+                QUEUE= [QUEUE;Packet_Size , Clock, packetType];
                 QUEUEOCCUPATION= QUEUEOCCUPATION + Packet_Size;
             else
                 if packetType == DATA                % data packet
@@ -104,6 +104,7 @@ while (TRANSMITTEDPACKETSdata+TRANSMITTEDPACKETSvoip)<P               % Stopping
         end
         
         if QUEUEOCCUPATION > 0
+            QUEUE= sortrows(QUEUE, 3, "descend");   % prioritize VOIP (order in descending order, bc VOIP is 1 and Data is 0
             Event_List = [Event_List; DEPARTURE, Clock + 8*QUEUE(1,1)/(C*10^6), QUEUE(1,1), QUEUE(1,2), QUEUE(1,3)];
             QUEUEOCCUPATION= QUEUEOCCUPATION - QUEUE(1,1);
             QUEUE(1,:)= [];
