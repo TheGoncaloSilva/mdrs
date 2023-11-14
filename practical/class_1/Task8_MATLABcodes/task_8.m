@@ -13,12 +13,12 @@ nFlows= size(T,1);
 %plotGraph(Nodes,Links,10);
 
 % Computing up to k=6 shortest paths for all flows from 1 to nFlows:
-k= 6;
+k= 1;
 sP= cell(1,nFlows);
 nSP= zeros(1,nFlows);
 costs= zeros(1,nFlows);
 for f=1:nFlows
-    [shortestPath, totalCost] = kShortestPath(L,T(f,1),T(f,2),1);
+    [shortestPath, totalCost] = kShortestPath(L,T(f,1),T(f,2),k);
     sP{f}= shortestPath;
     nSP(f)= length(totalCost);
     costs(f)= totalCost;
@@ -72,3 +72,20 @@ end
 %% Exercise 8.c - Determine the k = 4 shortest paths provided by the network for traffic flow 1. 
 %   Present the length and the sequence of nodes of each path.
 fprintf('\nExercise 8.c:\n');
+% Computing k=10 shortest paths for flow f= 4:
+k= 4;
+f= 1;
+[shortestPath, totalCost] = kShortestPath(L,T(f,1),T(f,2),k);
+
+% Visualizing the 6th path and its length:
+for i=1:k
+    fprintf('Path %d:  %s  (length = %.0f)\n',i,num2str(shortestPath{i}),totalCost(i));
+end
+
+%% Exercise 8.d - Consider the determination of a symmetrical single routing path solution with minimum
+%   worst link load. Run the provided optimization algorithm based on the random strategy.
+%   Consider a runtime limit of 5 seconds and all possible routing paths for each flow. Display
+%   the assigned routing paths, the resulting link loads, and the performance parameters of the
+%   algorithm. Compare the worst link load values of this solution and the solution of 8.b.
+fprintf('\nExercise 8.d:\n');
+
