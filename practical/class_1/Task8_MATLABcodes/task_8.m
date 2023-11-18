@@ -243,3 +243,7 @@ end
 fprintf('Worst link load of the best solution = %.2f\n',bestLoad);
 fprintf('Solutions considered: %d\n', contador);
 fprintf('Avg. worst link load among all solutions= %.2f\n',somador/contador);
+
+% Conclusion: Reducing the set of solutions to 6 did not show an
+%   improvement the worst link load, it in fact did worse, by considering
+%   more solutions and having an average worst link load in all of them
