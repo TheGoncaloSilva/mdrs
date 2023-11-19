@@ -209,7 +209,7 @@ for f=1:nFlows
     nSP(f)= length(totalCost);
 end
 
-[bestSol, bestLoads, bestLoad, contador, somador] = greedyRandomizedStrategy(sP, nSP, T, nNodes, Links, 5);
+[bestSol, bestLoads, bestLoad, contador, somador, ~] = greedyRandomizedStrategy(sP, nSP, T, nNodes, Links, 5);
 
 %Output of link loads of the routing solution:
 fprintf('Worst link load of the best solution = %.2f\n',bestLoad);
@@ -237,7 +237,7 @@ for f=1:nFlows
     nSP(f)= length(totalCost);
 end
 
-[bestSol, bestLoads, bestLoad, contador, somador] = greedyRandomizedStrategy(sP, nSP, T, nNodes, Links, 5);
+[bestSol, bestLoads, bestLoad, contador, somador,~] = greedyRandomizedStrategy(sP, nSP, T, nNodes, Links, 5);
 
 %Output of link loads of the routing solution:
 fprintf('Worst link load of the best solution = %.2f\n',bestLoad);
