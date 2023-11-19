@@ -1,4 +1,4 @@
-function [bestSol, bestLoads, bestLoad, contador, somador, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, timeLimit, numIterations)
+function [bestSol, bestLoads, bestLoad, contador, somador, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, timeLimit)
     nFlows = height(T);
     t= tic;
     bestLoad= inf;  % objective function value
@@ -9,45 +9,21 @@ function [bestSol, bestLoads, bestLoad, contador, somador, bestLoadTime] = multi
     bestSol = zeros(1, nFlows);
     bestLoads = calculateLinkLoads(nNodes, Links, T, sP, bestSol);
     
-    while contador < numIterations && toc(t) < timeLimit
+    while toc(t) < timeLimit
         % Generate initial solution using Greedy Randomized approach
-        sol = greedyRandomized(sP, nSP, T, nNodes, Links);
+        [sol, ~, load, ~, ~, ~] = greedyRandomizedStrategy(sP, nSP, T, nNodes, Links, 5);
         
         % Perform hill climbing on the Greedy Randomized initial solution
-        [sol, Loads, load] = hillClimbing(sP, nSP, T, nNodes, Links, sol);
+        [sol, load] = hillClimbing(sP, nSP, T, nNodes, Links, sol, load);
         
         % Update the best solution if a better one is found
         if load < bestLoad
             bestSol = sol;
-            bestLoads = Loads;
             bestLoad = load;
             bestLoadTime= toc(t);
         end
         
         contador = contador + 1;
         somador = somador + load;
-    end
-end
-
-function sol = greedyRandomized(sP, nSP, T, nNodes, Links)
-    nFlows = height(T);
-    sol = zeros(1, nFlows);
-    
-    % Greedy Randomized approach to generate initial solution
-    for f = randperm(nFlows)
-        auxBest = inf;
-        
-        for i = 1:nSP(f)
-            sol(f) = i;
-            auxLoads = calculateLinkLoads(nNodes, Links, T, sP, sol);
-            auxLoad = max(max(auxLoads(:, 3:4)));
-            
-            if auxLoad < auxBest
-                auxBest = auxLoad;
-                ibest = i;
-            end
-        end
-        
-        sol(f) = ibest;
     end
 end

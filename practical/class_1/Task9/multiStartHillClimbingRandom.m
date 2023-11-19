@@ -5,16 +5,18 @@ function [bestSol, bestLoads, bestLoad, contador, somador,bestLoadTime] = multiS
     contador= 0;
     somador= 0;
     
-    % Initialize best solution
-    bestSol = zeros(1, nFlows);
-    bestLoads = calculateLinkLoads(nNodes, Links, T, sP, bestSol);
-    
     while toc(t) < timeLimit
         % Generate a random initial solution
-        sol = randi([1, max(nSP)], 1, nFlows);
+        sol= zeros(1,nFlows);
+        for f= 1:nFlows
+            sol(f)= randi(nSP(f));
+        end
+
+        Loads = calculateLinkLoads(nNodes, Links, T, sP, sol);
+        load = max(max(Loads(:, 3:4)));
         
         % Perform hill climbing on the random initial solution
-        [sol, Loads, load] = hillClimbing(sP, nSP, T, nNodes, Links, sol);
+        [sol, load] = hillClimbing(sP, nSP, T, nNodes, Links, sol, load);
         
         % Update the best solution if a better one is found
         if load < bestLoad
