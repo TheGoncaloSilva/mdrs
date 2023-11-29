@@ -1,10 +1,13 @@
 function [bestSol, bestLoads, bestLoad, contador, somador, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, timeLimit)
+    %% Attention: this is modification of the algorithm available in task 9
+    %   for the challenge exercise, please don't use it outside of this
+    %   scope
     nFlows = height(T);
     t= tic;
     bestLoad= inf;  % objective function value
     contador= 0;
     somador= 0;
-    
+   
     while toc(t) < timeLimit
         % Generate initial solution using Greedy Randomized approach
         sol= zeros(1,nFlows);
@@ -12,7 +15,7 @@ function [bestSol, bestLoads, bestLoad, contador, somador, bestLoadTime] = multi
             auxBest= inf;
             for i=1:nSP(f)
                 sol(f)= i;
-                auxLoads= calculateLinkLoads(nNodes,Links,T,sP,sol);
+                auxLoads= calculateLinkBand1to1(nNodes,Links,T,sP,sol);
                 auxLoad= max(max(auxLoads(:,3:4)));
                 if auxLoad < auxBest
                     auxBest= auxLoad;
@@ -21,7 +24,8 @@ function [bestSol, bestLoads, bestLoad, contador, somador, bestLoadTime] = multi
             end
             sol(f)= ibest;
         end
-        Loads= calculateLinkLoads(nNodes,Links,T,sP,sol);
+
+        Loads= calculateLinkBand1to1(nNodes,Links,T,sP,sol);
         load= max(max(Loads(:,3:4)));   % calculate max capacity of link loads
         
         % Perform hill climbing on the Greedy Randomized initial solution

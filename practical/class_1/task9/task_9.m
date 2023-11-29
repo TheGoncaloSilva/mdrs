@@ -93,7 +93,7 @@ fprintf('\t W = %.2f Gbps, No. sol = %d, Av. W = %.2f, time = %.2f sec\n', bestL
 %   compare with the previous results obtained in 9.c and take conclusions.
 fprintf('\nExercise 9.d:\n');
 
-% Computing up to k=inf shortest paths for all flows from 1 to nFlows:
+% Computing up to k=6 shortest paths for all flows from 1 to nFlows:
 k= 6;
 sP= cell(1,nFlows);
 nSP= zeros(1,nFlows);

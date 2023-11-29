@@ -103,8 +103,6 @@ for f=1:nFlows
         if ~isempty(shortestPath)
             sP{2,f}{i}= shortestPath{1};
             availabilities(2,f)= exp(-totalCost);% use exp to inverse log first node of the link   
-        else
-            availabilities(2,f)= 0;% use exp to inverse log first node of the link
         end
     end
 end
@@ -157,7 +155,7 @@ fprintf('Total bandwidth capacity on all links = %.1f Gbps\n', bandwith);
 
 
 for i= 1:nLinks
-    fprintf('{%d - %d}:\t%.2f\t%.2f\n', Loads(i), Loads(i+length(Loads)), Loads(i+length(Loads)*2), Loads(i+length(Loads)*3))
+    fprintf('{%2d - %2d}:\t%.2f\t%.2f\n', Loads(i), Loads(i+length(Loads)), Loads(i+length(Loads)*2), Loads(i+length(Loads)*3))
 end
 
 %% Exercise 10.f - Compute how much bandwidth capacity is required on each 
@@ -180,7 +178,7 @@ fprintf('Total bandwidth capacity on all links = %.1f Gbps\n', bandwith);
 
 
 for i= 1:nLinks
-    fprintf('{%d - %d}:\t%.2f\t%.2f\n', Loads(i), Loads(i+length(Loads)), Loads(i+length(Loads)*2), Loads(i+length(Loads)*3))
+    fprintf('{%2d - %2d}:\t%.2f\t%.2f\n', Loads(i), Loads(i+length(Loads)), Loads(i+length(Loads)*2), Loads(i+length(Loads)*3))
 end
 
 % Conclusion: For 1:1 protection, the worst bandwidth capacity required 
