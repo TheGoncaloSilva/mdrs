@@ -1,4 +1,4 @@
-function [sol, energy] = hillClimbing(sP, nSP, T, nNodes, Links, sol, energy)
+function [sol, energy] = hillClimbing(sP, nSP, T, nNodes, Links, sol, energy, L, C, alpha)
     % This function represents a First Best Neighbor (FBN) move variant 
     % within the context of a hill-climbing algorithm. It explores adjacent 
     % solutions by considering the first neighboring solution that improves 
@@ -32,7 +32,7 @@ function [sol, energy] = hillClimbing(sP, nSP, T, nNodes, Links, sol, energy)
                     
                     % check if this solution is better than the previous
                     % found one
-                    if auxenergy < bestLocalEnergy && auxLoad <= (C(Loads(f,1), Loads(f,2))* alpha)
+                    if auxenergy < bestLocalEnergy && auxLoad <= (C(Loads(flow,1), Loads(flow,2))* alpha)
                         bestLocalEnergy = auxenergy;
                         bestLocalSol = auxSol;
                     end

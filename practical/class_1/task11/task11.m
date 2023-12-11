@@ -2,6 +2,13 @@
 %   initial Greedy Randomized solutions to solve this optimization problem 
 %   (use algorithm D of Task 9 as starting point). Computing up to k=4 
 %   shortest paths for all flows from 1 to nFlows:
+
+%% Exercise 11.b - Run the algorithm considering α = 1, a runtime limit of 
+%   15 seconds and all possible routing paths for each flow. Register the 
+%   energy consumption (E), the worst link load (W), the total number of 
+%   solutions (No. sol), the running time (time) at which the algorithm has
+%   obtained the best solution and the list of links in sleeping mode of 
+%   the best solution.
 close all
 clc
 clear
@@ -11,19 +18,11 @@ nNodes= size(Nodes,1);
 nLinks= size(Links,1);
 nFlows= size(T,1);
 
-fprintf('Exercise 11.a:\n');
+fprintf('Exercise 11.b:\n');
 
-MTTR= 24;
-CC= 450;
-MTBF= (CC*365*24)./L;
-A= MTBF./(MTBF + MTTR);
-A(isnan(A))= 1;
-Alog= -log(A);
-
-% Computing up to k=4 link disjoint paths
+% Computing up to k=inf link disjoint paths
 %   for all flows from 1 to nFlows:
 k= inf;
-alpha= 1;
 sP= cell(1,nFlows);
 nSP= zeros(1,nFlows);
 for f=1:nFlows
@@ -31,27 +30,113 @@ for f=1:nFlows
     sP{f}= shortestPath;
     nSP(f)= length(totalCost);
 end
+% sP{f}{i} is the i-th path of flow f
+% nSP(f) is the number of paths of flow f
 
-[sol, Loads, energy, contador, somador, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, 5, alpha, L, C);
-fprintf('E = %.2f Gbps, No. sol = %d, Av. W = %.2f, time = %.2f sec\n', energy, contador, somador/contador, bestLoadTime);
+runtimeLimint= 15;
+alpha= 0.8;
+[~, Loads, energy, contador, ~, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, runtimeLimint, alpha, L, C);
+fprintf('E = %.2f\tW = %.2f Gbps\tNo. sols = %d\ttime = %.2f\n', energy, max(max(Loads(:,3:4))), contador, bestLoadTime);
 
-% Find and print flows with the minimum number of paths
-minPaths = min(nSP);
-fprintf('Minimum no. of paths= %d\n', minPaths);
-minFlowIndices = find(nSP == minPaths); % get the flows with minimum paths
-for flow = minFlowIndices
-    fprintf('\tFlow %d (%d -> %d)\n', flow, sP{flow}{sol(flow)}(1), sP{flow}{sol(flow)}(end));
+fprintf('List of links in sleeping mode: ');
+for i = 1:length(Loads)
+    if sum(Loads(i, 3:4)) == 0
+        fprintf('{%d,%d} ', Loads(i,1), Loads(i,2));
+    end
 end
+fprintf('\n');
 
-% Determine the worst link load:
-maxLoad= max(max(Loads(:,3:4)));
-bandwith= sum(sum(Loads(:,3:4)));
-fprintf('Worst bandwidth capacity = %.1f Gbps\n', maxLoad);
-fprintf('Total bandwidth capacity on all links = %.1f Gbps\n', bandwith);
+%% Exercise 11.c - Run the algorithm considering α = 1, a runtime limit of 
+%   15 seconds and the 6 shortest routing paths for each flow. Register the 
+%   same parameters as before. Compare these results with the results 
+%   obtained in 11.b and take conclusions.
+fprintf('Exercise 11.c:\n');
 
-fprintf('Paths that can be put on sleep mode\n');
-for i= 1:nLinks
-    % This calculations are the same as using indexing in a bidimensional
-    % table (x,y) = x+y
-    fprintf('{%2d - %2d}:\t%.2f\t%.2f\n', Loads(i), Loads(i+length(Loads)), Loads(i+length(Loads)*2), Loads(i+length(Loads)*3))
+% Computing up to k=6 link disjoint paths
+%   for all flows from 1 to nFlows:
+k= 6;
+sP= cell(1,nFlows);
+nSP= zeros(1,nFlows);
+for f=1:nFlows
+    [shortestPath, totalCost] = kShortestPath(L,T(f,1),T(f,2),k);
+    sP{f}= shortestPath;
+    nSP(f)= length(totalCost);
 end
+% sP{f}{i} is the i-th path of flow f
+% nSP(f) is the number of paths of flow f
+
+runtimeLimint= 15;
+alpha= 0.8;
+[~, Loads, energy, contador, ~, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, runtimeLimint, alpha, L, C);
+fprintf('E = %.2f\tW = %.2f Gbps\tNo. sols = %d\ttime = %.2f\n', energy, max(max(Loads(:,3:4))), contador, bestLoadTime);
+
+fprintf('List of links in sleeping mode: ');
+for i = 1:length(Loads)
+    if sum(Loads(i, 3:4)) == 0
+        fprintf('{%d,%d} ', Loads(i,1), Loads(i,2));
+    end
+end
+fprintf('\n');
+
+%% Exercise 11.d - Run the algorithm considering α = 0.8, a runtime limit 
+%   of 15 seconds and all possible routing paths for each flow. Register 
+%   the same parameters as before.
+fprintf('Exercise 11.d:\n');
+
+% Computing up to k=inf link disjoint paths
+%   for all flows from 1 to nFlows:
+k= inf;
+sP= cell(1,nFlows);
+nSP= zeros(1,nFlows);
+for f=1:nFlows
+    [shortestPath, totalCost] = kShortestPath(L,T(f,1),T(f,2),k);
+    sP{f}= shortestPath;
+    nSP(f)= length(totalCost);
+end
+% sP{f}{i} is the i-th path of flow f
+% nSP(f) is the number of paths of flow f
+
+runtimeLimint= 15;
+alpha= 0.8;
+[~, Loads, energy, contador, ~, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, runtimeLimint, alpha, L, C);
+fprintf('E = %.2f\tW = %.2f Gbps\tNo. sols = %d\ttime = %.2f\n', energy, max(max(Loads(:,3:4))), contador, bestLoadTime);
+
+fprintf('List of links in sleeping mode: ');
+for i = 1:length(Loads)
+    if sum(Loads(i, 3:4)) == 0
+        fprintf('{%d,%d} ', Loads(i,1), Loads(i,2));
+    end
+end
+fprintf('\n');
+
+%% Exercise 11.e - Run the algorithm considering α = 0.8, a runtime limit 
+%   of 15 seconds and the 6 shortest routing paths for each flow. Register 
+%   the same parameters as before. Compare these results with the results 
+%   obtained in 11.b, 11.c and 11.d and take conclusions.
+fprintf('Exercise 11.e:\n');
+
+% Computing up to k=6 link disjoint paths
+%   for all flows from 1 to nFlows:
+k= 6;
+sP= cell(1,nFlows);
+nSP= zeros(1,nFlows);
+for f=1:nFlows
+    [shortestPath, totalCost] = kShortestPath(L,T(f,1),T(f,2),k);
+    sP{f}= shortestPath;
+    nSP(f)= length(totalCost);
+end
+% sP{f}{i} is the i-th path of flow f
+% nSP(f) is the number of paths of flow f
+
+runtimeLimint= 15;
+alpha= 0.8;
+[~, Loads, energy, contador, ~, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, runtimeLimint, alpha, L, C);
+fprintf('E = %.2f\tW = %.2f Gbps\tNo. sols = %d\ttime = %.2f\n', energy, max(max(Loads(:,3:4))), contador, bestLoadTime);
+fprintf('List of links in sleeping mode: ');
+for i = 1:length(Loads)
+    if sum(Loads(i, 3:4)) == 0
+        fprintf('{%d,%d} ', Loads(i,1), Loads(i,2));
+    end
+end
+fprintf('\n');
+

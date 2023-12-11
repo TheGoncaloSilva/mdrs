@@ -34,10 +34,11 @@ function [bestSol, bestLoads, bestEnergy, contador, somador, bestLoadTime] = mul
             end
         end
         Loads= calculateLinkLoads(nNodes,Links,T,sP,sol);
+        energy= calculateEnergyConsumption(L, Loads);
         %load= max(max(Loads(:,3:4)));   % calculate max capacity of link loads
         
         % Perform hill climbing on the Greedy Randomized initial solution
-        [sol, ~]= hillClimbing(sP, nSP, T, nNodes, Links, sol, auxEnergy);
+        [sol, ~]= hillClimbing(sP, nSP, T, nNodes, Links, sol, energy, L, C, alpha);
         Loads= calculateLinkLoads(nNodes,Links,T,sP,sol);
         energy= calculateEnergyConsumption(L, Loads);
 
