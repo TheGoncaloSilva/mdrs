@@ -8,7 +8,7 @@ function [sol, energy] = hillClimbing(sP, nSP, T, nNodes, Links, sol, energy, L,
 
     nFlows = size(T, 1);
     
-    bestLocalEnergy= inf;
+    bestLocalEnergy= energy;
     bestLocalSol = sol;
     improved = true;
 
@@ -28,13 +28,15 @@ function [sol, energy] = hillClimbing(sP, nSP, T, nNodes, Links, sol, energy, L,
                     % Calculate the loads and energy of this solution
                     Loads = calculateLinkLoads(nNodes, Links, T, sP, auxSol);
                     auxLoad = max(max(Loads(:, 3:4)));
-                    auxenergy= calculateEnergyConsumption(L, Loads);
+                    if auxLoad <= (alpha * 10) % assuming equal capacity for all links -> 10
+                        auxenergy= calculateEnergyConsumption(L, Loads);
                     
-                    % check if this solution is better than the previous
-                    % found one
-                    if auxenergy < bestLocalEnergy && auxLoad <= (C(Loads(flow,1), Loads(flow,2))* alpha)
-                        bestLocalEnergy = auxenergy;
-                        bestLocalSol = auxSol;
+                        % check if this solution is better than the previous
+                        % found one
+                        if auxenergy < bestLocalEnergy
+                            bestLocalEnergy = auxenergy;
+                            bestLocalSol = auxSol;
+                        end
                     end
                 end
             end

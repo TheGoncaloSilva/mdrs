@@ -6,9 +6,10 @@ function [bestSol, bestLoads, bestEnergy, contador, somador, bestLoadTime] = mul
     somador= 0;
     
     while toc(t) < timeLimit
-        load= inf;
+        continuar= true;
         % Respect alpha
-        while load == inf 
+        while continuar 
+            continuar= false;
             % Generate initial solution using Greedy Randomized approach
             sol= zeros(1,nFlows);
             for f= randperm(nFlows)
@@ -18,17 +19,18 @@ function [bestSol, bestLoads, bestEnergy, contador, somador, bestLoadTime] = mul
                     sol(f)= i;
                     auxLoads= calculateLinkLoads(nNodes,Links,T,sP,sol);
                     auxLoad= max(max(auxLoads(:,3:4)));
-                    auxenergy= calculateEnergyConsumption(L, auxLoads);
-                    if auxenergy < auxBestEnergy && auxLoad <= (C(auxLoads(f,1), auxLoads(f,2))* alpha)
-                        auxBestEnergy= auxenergy;
-                        ibest= i;
-                        load= auxLoad;
+                    if auxLoad <= (alpha * 10) % assuming equal link capacity -> 10
+                        auxenergy= calculateEnergyConsumption(L, auxLoads);
+                        if  auxenergy < auxBestEnergy
+                            auxBestEnergy= auxenergy;
+                            ibest= i;
+                        end
                     end
                 end
                 if ibest > 0
                     sol(f)= ibest;
                 else
-                    load= inf;
+                    continuar= true;
                     break;
                 end
             end

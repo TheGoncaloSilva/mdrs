@@ -34,7 +34,7 @@ end
 % nSP(f) is the number of paths of flow f
 
 runtimeLimint= 15;
-alpha= 0.8;
+alpha= 1;
 [~, Loads, energy, contador, ~, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, runtimeLimint, alpha, L, C);
 fprintf('E = %.2f\tW = %.2f Gbps\tNo. sols = %d\ttime = %.2f\n', energy, max(max(Loads(:,3:4))), contador, bestLoadTime);
 
@@ -50,7 +50,7 @@ fprintf('\n');
 %   15 seconds and the 6 shortest routing paths for each flow. Register the 
 %   same parameters as before. Compare these results with the results 
 %   obtained in 11.b and take conclusions.
-fprintf('Exercise 11.c:\n');
+fprintf('\nExercise 11.c:\n');
 
 % Computing up to k=6 link disjoint paths
 %   for all flows from 1 to nFlows:
@@ -66,7 +66,7 @@ end
 % nSP(f) is the number of paths of flow f
 
 runtimeLimint= 15;
-alpha= 0.8;
+alpha= 1;
 [~, Loads, energy, contador, ~, bestLoadTime] = multiStartHillClimbingGreedy(sP, nSP, T, nNodes, Links, runtimeLimint, alpha, L, C);
 fprintf('E = %.2f\tW = %.2f Gbps\tNo. sols = %d\ttime = %.2f\n', energy, max(max(Loads(:,3:4))), contador, bestLoadTime);
 
@@ -81,7 +81,7 @@ fprintf('\n');
 %% Exercise 11.d - Run the algorithm considering α = 0.8, a runtime limit 
 %   of 15 seconds and all possible routing paths for each flow. Register 
 %   the same parameters as before.
-fprintf('Exercise 11.d:\n');
+fprintf('\nExercise 11.d:\n');
 
 % Computing up to k=inf link disjoint paths
 %   for all flows from 1 to nFlows:
@@ -113,7 +113,7 @@ fprintf('\n');
 %   of 15 seconds and the 6 shortest routing paths for each flow. Register 
 %   the same parameters as before. Compare these results with the results 
 %   obtained in 11.b, 11.c and 11.d and take conclusions.
-fprintf('Exercise 11.e:\n');
+fprintf('\nExercise 11.e:\n');
 
 % Computing up to k=6 link disjoint paths
 %   for all flows from 1 to nFlows:
