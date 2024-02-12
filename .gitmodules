@@ -1,0 +1,6 @@
+[submodule "projects/mdrs_proj_1"]
+	path = projects/mdrs_proj_1
+	url = git@github.com:TheGoncaloSilva/mdrs_proj_1.git
+[submodule "projects/mdrs_proj2"]
+	path = projects/mdrs_proj2
+	url = git@github.com:CatarinaBarroqueiro/mdrs_proj2.git
